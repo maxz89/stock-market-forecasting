@@ -1,0 +1,9 @@
+# App Data
+/backend/archive/
+**/__pycache__
+/backend/evadb_data/
+node_modules
+build
+
+# Secrets
+app_secrets.py
