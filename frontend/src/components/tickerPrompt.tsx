@@ -8,6 +8,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
+  LinearProgress,
 } from '@mui/material';
 
 const TickerPrompt = () => {
@@ -15,11 +16,15 @@ const TickerPrompt = () => {
   const [forecast, setForecast] = useState('');
   const [low, setLow] = useState('');
   const [high, setHigh] = useState('');
-  const [model, setModel] = useState(''); // Add state for selected radio button
+  const [model, setModel] = useState('');
+  const [isLoadbar, setIsLoadbar] = useState(false);
 
   const handleQuestionSubmit = async () => {
     // Simulate a response from a chatbot (replace with actual API call)
+    setIsLoadbar(true);
+    setForecast('');
     const response: string = await getForecast(ticker);
+    setIsLoadbar(false);
 
     // Set the response in the state
     setForecast(response);
@@ -66,16 +71,10 @@ const TickerPrompt = () => {
             label="ARIMA"
           />
           <FormControlLabel
-            value="ting"
-            control={<Radio />}
-            label="ting"
-          />
-          <FormControlLabel
             value="ETS"
             control={<Radio />}
             label="ETS"
           />
-
           <FormControlLabel
             value="Theta"
             control={<Radio />}
@@ -89,9 +88,15 @@ const TickerPrompt = () => {
         >
           Submit
         </Button>
+        {isLoadbar && (
+          <div style={{ marginTop: '20px' }}>
+            <LinearProgress />
+            <Typography variant="subtitle1">fetching data and training model...</Typography>
+          </div>
+        )}
         {forecast && (
           <div style={{ marginTop: '20px' }}>
-            <Typography variant="h6">Bot's Response:</Typography>
+            <Typography variant="h6">Next Day Forecasted Price:</Typography>
             <Typography>{forecast}</Typography>
             <Typography variant="h6">90% Confidence Interval:</Typography>
             <Typography>{"["}{low}{" - "}{high}{"]"}</Typography>
